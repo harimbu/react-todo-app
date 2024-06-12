@@ -23,3 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
+# firebase conf
+src/conf/
