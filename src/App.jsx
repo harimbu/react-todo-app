@@ -1,21 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
+import { db } from './conf/firebase'
+import { collection, query, where, onSnapshot } from 'firebase/firestore'
 
 export default function App() {
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      title: '청소하기',
-    },
-    {
-      id: 2,
-      title: '일찍 일어나기',
-    },
-    {
-      id: 3,
-      title: '자바스크립트 공부하기',
-    },
-  ])
+  const [todos, setTodos] = useState([])
+
+  useEffect(() => {
+    const q = query(collection(db, 'notes'))
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const todos = []
+      querySnapshot.forEach((doc) => {
+        todos.push(doc.data())
+      })
+    })
+
+    setTodos(todos)
+  }, [])
 
   return (
     <div className='container'>
@@ -30,8 +31,8 @@ export default function App() {
 
       <div className='todos'>
         {todos.map((todo) => (
-          <div className='todo_item'>
-            <input type='checkbox' name='' id='' /> 안녕하세요
+          <div className='todo_item' key={todo.id}>
+            <input type='checkbox' name='' id='' /> {todo.title}
             <div className='btns'>
               <button>수정</button>
               <button>삭제</button>
