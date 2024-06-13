@@ -28,7 +28,7 @@ export default function App() {
       <Header />
       <TodoInput />
       <Todos todos={todos} />
-      <TodoBottom />
+      <TodoBottom todos={todos} />
     </div>
   )
 }

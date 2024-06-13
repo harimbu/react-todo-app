@@ -1,22 +1,30 @@
-import { collection, doc, setDoc } from 'firebase/firestore'
+import { db } from '../conf/firebase'
+import { collection, doc, serverTimestamp, setDoc } from 'firebase/firestore'
 import { useState } from 'react'
 
 export default function TodoInput() {
-  const [title, setTitle] = useState('안녕')
+  const [title, setTitle] = useState('')
 
-  function handleSubmit(e) {
+  async function writeTodo(e) {
     e.preventDefault()
-
-    console.log('abc')
+    const todoRef = doc(collection(db, 'todos'))
+    const data = {
+      id: todoRef.id,
+      title: title,
+      isDone: false,
+      date: serverTimestamp(),
+    }
+    await setDoc(todoRef, data)
+    setTitle('')
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={writeTodo}>
       <input
         type='text'
         placeholder='Write a todo..'
         value={title}
-        onChange={() => {}}
+        onChange={(e) => setTitle(e.target.value)}
       />
     </form>
   )
