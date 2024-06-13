@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import { db } from './conf/firebase'
-import { collection, query, where, onSnapshot } from 'firebase/firestore'
+import { collection, query, onSnapshot } from 'firebase/firestore'
 
 export default function App() {
   const [todos, setTodos] = useState([])
 
   useEffect(() => {
-    const q = query(collection(db, 'notes'))
+    const q = query(collection(db, 'todos'))
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const todos = []
       querySnapshot.forEach((doc) => {
         todos.push(doc.data())
       })
+      setTodos(todos)
     })
 
-    setTodos(todos)
+    return () => unsubscribe
   }, [])
 
   return (
